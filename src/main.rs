@@ -1,43 +1,61 @@
+use std::fmt::{self, Formatter, Display};
+
+struct City {
+    name: &'static str,
+    // Latitude
+    lat: f32,
+    // Longitude
+    lon: f32,
+}
+
+impl Display for City {
+    // `f` is a buffer, and this method must write the formatted string into it
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        let lat_c = if self.lat >= 0.0 { 'N' } else { 'S' };
+        let lon_c = if self.lon >= 0.0 { 'E' } else { 'W' };
+
+        // `write!` is like `format!`, but it will write the formatted string
+        // into a buffer (the first argument)
+        write!(f, "{}: {:.3}°{} {:.3}°{}",
+               self.name, self.lat.abs(), lat_c, self.lon.abs(), lon_c)
+    }
+}
+
+#[derive(Debug)]
+struct Color {
+    red: u8,
+    green: u8,
+    blue: u8,
+}
+
+impl Display for Color {
+    // `f` is a buffer, and this method must write the formatted string into it
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+      
+
+        // `write!` is like `format!`, but it will write the formatted string
+        // into a buffer (the first argument)
+        write!(f, "{}: ({red:?} {green:?} {blue:?}) #{red:02X?}{green:02X?}{blue:02X?}",
+               "RGB", red=self.red, green=self.green, blue=self.blue)
+    }
+}
+
 
 fn main() {
-    // In general, the `{}` will be automatically replaced with any
-    // arguments. These will be stringified.
-    println!("{} days", 31);
-
-    // Without a suffix, 31 becomes an i32. You can change what type 31 is
-    // by providing a suffix. The number 31i64 for example has the type i64.
-
-    // There are various optional patterns this works with. Positional
-    // arguments can be used.
-    println!("{0}, this is {1}. {1}, this is {0}", "Alice", "Bob");
-
-    // As can named arguments.
-    println!("{subject} {verb} {object}",
-             object="the lazy dog",
-             subject="the quick brown fox",
-             verb="jumps over");
-
-    // Special formatting can be specified after a `:`.
-    println!("{} of {:b} people know binary, the other half doesn't", 1, 2);
-
-    // You can right-align text with a specified width. This will output
-    // "     1". 5 white spaces and a "1".
-    println!("{number:>width$}", number=1, width=6);
-
-    // You can pad numbers with extra zeroes. This will output "000001".
-    println!("{number:0>width$}", number=1, width=6);
-
-    // Rust even checks to make sure the correct number of arguments are
-    // used.
-    println!("My name is {0}, {1} {0}", "Bond", "James");
-    // FIXME ^ Add the missing argument: "James"
-
-    // Create a structure named `Structure` which contains an `i32`.
-    #[allow(dead_code)]
-    struct Structure(i32);
-
-    // However, custom types such as this structure require more complicated
-    // handling. This will not work.
-    // println!("This struct `{}` won't print...", Structure(3));
-    // FIXME ^ Comment out this line.
+    // for city in [
+    //     City { name: "Dublin", lat: 53.347778, lon: -6.259722 },
+    //     City { name: "Oslo", lat: 59.95, lon: 10.75 },
+    //     City { name: "Vancouver", lat: 49.25, lon: -123.1 },
+    // ].iter() {
+    //     println!("{}", *city);
+    // }
+    for color in [
+        Color { red: 128, green: 255, blue: 90 },
+        Color { red: 0, green: 3, blue: 254 },
+        Color { red: 0, green: 0, blue: 0 },
+    ].iter() {
+        // Switch this to use {} once you've added an implementation
+        // for fmt::Display.
+        println!("{}", *color);
+    }
 }
